@@ -264,7 +264,7 @@
         <select id="citySelector" class="city-select">
         </select>
     </div>
-    
+
         <div id="updateTime" class="update-pill">更新中...</div>
     </div>
 
@@ -439,6 +439,32 @@
                 document.getElementById('loading').style.display = 'none';
             }
         }
+
+        // 初始化下拉選單
+        function initCitySelector() {
+            const selector = document.getElementById('citySelector');
+            selector.innerHTML = ''; // 清空
+
+            // 遍歷 CITY_DATA 自動產生選項
+            for (const [key, data] of Object.entries(CITY_DATA)) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = data.name;
+                
+                // 設定預設選項為臺南
+                if (key === 'tainan') {
+                    option.selected = true;
+                }
+                
+                selector.appendChild(option);
+            }
+        }
+
+        // 記得在頁面載入時呼叫它！
+        document.addEventListener("DOMContentLoaded", () => {
+            initCitySelector(); // 先產生選單
+            fetchWeather();     // 再抓天氣
+        });
 
         // 監聽選單切換事件
         document.getElementById('citySelector').addEventListener('change', function(e) {

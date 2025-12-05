@@ -23,17 +23,17 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* === 修正 Body === */
         body {
+            /* 把原本的粉紅色背景拿掉，不然可能會擋住影片 */
+            background: transparent; 
+            /* 或者是把 background 相關的整行刪除 */
+            
             font-family: 'Noto Sans TC', sans-serif;
             min-height: 100vh;
             color: var(--text-color);
             overflow-x: hidden;
             padding-bottom: 20px;
-            
-            /* 背景：流動的漸層色，營造高級感 */
-            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
         }
 
         /* 讓背景動起來 */
@@ -41,6 +41,29 @@
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
+        }
+
+        /* === 背景影片設定 === */
+        #bgVideo {
+            position: fixed;      /* 關鍵：鎖定在視窗，不隨捲動跑掉 */
+            top: 0;
+            left: 0;
+            width: 100%;          /* 寬度佔滿視窗 */
+            height: 100%;         /* 高度佔滿視窗 */
+            object-fit: cover;    /* 關鍵：自動縮放並裁切，保持影片比例不變形 */
+            z-index: -10;         /* 關鍵：設為負值，確保它在所有內容的「背後」 */
+        }
+
+        /* === 影片遮罩層 (選用) === */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* 40% 的黑色半透明，讓白字更清晰 */
+            z-index: -5;          /* 比影片高(-10)，但比內容低(預設0) */
+            pointer-events: none; /* 讓滑鼠點擊可以直接穿透遮罩，不影響操作 */
         }
 
         /* === 毛玻璃通用類別 === */
@@ -254,10 +277,20 @@
 </head>
 
 <body>
+
+
     <div id="loading" class="loading-screen">
         <div style="font-size: 4rem; animation: bounce 2s infinite;">✨</div>
         <p style="color: white; font-weight: bold; margin-top: 20px; letter-spacing: 2px;">WEATHER LOADING...</p>
     </div>
+
+    <!-- 背景影片 -->
+    <video autoplay muted loop playsinline id="bgVideo">
+    <source src="Cloud Sky Blue Video.mp4" type="video/mp4">
+    </video>
+
+    <div class="video-overlay"></div>
+    
 
     <div class="status-bar">
         <div class="city-select-wrapper">

@@ -255,6 +255,15 @@
             font-weight: 700;
             font-size: 1.1rem;
         }
+        /* === Footer (頁尾) 設定 === */
+        .footer {
+            text-align: center;
+            padding: 40px 0 20px; /* 上方留多一點空白，與內容區隔 */
+            font-size: 0.75rem;   /* 字體縮小，比較精緻 */
+            color: rgba(255, 255, 255, 0.6); /* 半透明白色，不搶視覺 */
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
 
         /* Loading 畫面 */
         .loading-screen {
@@ -296,7 +305,15 @@
         <div id="heroCard"></div>
 
         <h3 class="section-title">未來預報</h3>
+
+        <!-- // === 預報列表區域 === // -->
         <div class="forecast-list" id="futureForecasts"></div>
+
+        <footer class="footer">
+            <p>&copy; <span id="year"></span> 森森天氣 SenSen Weather.</p>
+            <p>All Rights Reserved. Designed by <span style="font-weight: 500; color: rgba(255,255,255,0.9);">Cath</span></p>
+        </footer>
+
     </div>
 
     <script>
@@ -494,6 +511,8 @@
             initCitySelector(); 
             updateBackgroundVideo(); // 一進來先檢查一次時間，決定要播哪部
             fetchWeather();     
+        // 新增這一行：自動更新 Footer 年份
+        document.getElementById('year').textContent = new Date().getFullYear();
         });
 
         // 監聽選單切換事件

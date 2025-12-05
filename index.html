@@ -23,12 +23,9 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* === 修正 Body === */
+        /* === Body 設定 === */
         body {
-            /* 把原本的粉紅色背景拿掉，不然可能會擋住影片 */
             background: transparent; 
-            /* 或者是把 background 相關的整行刪除 */
-            
             font-family: 'Noto Sans TC', sans-serif;
             min-height: 100vh;
             color: var(--text-color);
@@ -36,34 +33,28 @@
             padding-bottom: 20px;
         }
 
-        /* 讓背景動起來 */
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         /* === 背景影片設定 === */
         #bgVideo {
-            position: fixed;      /* 關鍵：鎖定在視窗，不隨捲動跑掉 */
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;          /* 寬度佔滿視窗 */
-            height: 100%;         /* 高度佔滿視窗 */
-            object-fit: cover;    /* 關鍵：自動縮放並裁切，保持影片比例不變形 */
-            z-index: -10;         /* 關鍵：設為負值，確保它在所有內容的「背後」 */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -10;
+            transition: opacity 1s ease; /* 增加淡入淡出效果的可能性 */
         }
 
-        /* === 影片遮罩層 (選用) === */
+        /* === 影片遮罩層 === */
         .video-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* 40% 的黑色半透明，讓白字更清晰 */
-            z-index: -5;          /* 比影片高(-10)，但比內容低(預設0) */
-            pointer-events: none; /* 讓滑鼠點擊可以直接穿透遮罩，不影響操作 */
+            background: rgba(0, 0, 0, 0.3); /* 稍微調淡一點遮罩，讓夜景清楚些 */
+            z-index: -5;
+            pointer-events: none;
         }
 
         /* === 毛玻璃通用類別 === */
@@ -107,11 +98,10 @@
         }
 
         .city-select option {
-            background: #333; /* 下拉選單內部的背景色，避免在不同瀏覽器看不清楚 */
+            background: #333;
             color: white;
         }
 
-        /* 自製下拉箭頭 */
         .city-select-wrapper::after {
             content: '▼';
             font-size: 0.7rem;
@@ -196,7 +186,7 @@
             opacity: 0.9;
         }
 
-        /* 建議區塊：改為極簡線條 */
+        /* 建議區塊 */
         .advice-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -223,7 +213,7 @@
             margin-top: 2px;
         }
 
-        /* === 稍後預報：改為垂直列表 (Vertical List) 更像手機介面 === */
+        /* === 稍後預報 === */
         .section-title {
             font-size: 1.1rem;
             margin-bottom: 15px;
@@ -278,26 +268,22 @@
 
 <body>
 
-
     <div id="loading" class="loading-screen">
         <div style="font-size: 4rem; animation: bounce 2s infinite;">✨</div>
         <p style="color: white; font-weight: bold; margin-top: 20px; letter-spacing: 2px;">WEATHER LOADING...</p>
     </div>
 
-    <!-- 背景影片 -->
     <video autoplay muted loop playsinline id="bgVideo">
-    <source src="Cloud Sky Blue Video.mp4" type="video/mp4">
+        <source src="Cloud Sky Blue Video.mp4" type="video/mp4">
     </video>
 
     <div class="video-overlay"></div>
     
-
     <div class="status-bar">
         <div class="city-select-wrapper">
-        <select id="citySelector" class="city-select">
-        </select>
-    </div>
-
+            <select id="citySelector" class="city-select">
+                </select>
+        </div>
         <div id="updateTime" class="update-pill">更新中...</div>
     </div>
 
@@ -309,9 +295,11 @@
     </div>
 
     <script>
-        // === 前端完整版：全臺 22 縣市設定 ===
+        // === 影片設定區 (請在這裡修改你的檔名) ===
+        const VIDEO_DAY = "Cloud Sky Blue Video.mp4";  // 白天影片
+        const VIDEO_NIGHT = "Sky Features Dusk to Dawn.mp4"; // 晚上影片 
+
         const CITY_DATA = {
-            // === 北部 ===
             "keelung": { name: "📍 基隆市", endpoint: "keelung" },
             "taipei": { name: "📍 臺北市", endpoint: "taipei" },
             "new_taipei": { name: "📍 新北市", endpoint: "new_taipei" },
@@ -319,35 +307,47 @@
             "hsinchu_city": { name: "📍 新竹市", endpoint: "hsinchu_city" },
             "hsinchu_county": { name: "📍 新竹縣", endpoint: "hsinchu_county" },
             "yilan": { name: "📍 宜蘭縣", endpoint: "yilan" },
-
-            // === 中部 ===
             "miaoli": { name: "📍 苗栗縣", endpoint: "miaoli" },
             "taichung": { name: "📍 臺中市", endpoint: "taichung" },
             "changhua": { name: "📍 彰化縣", endpoint: "changhua" },
             "nantou": { name: "📍 南投縣", endpoint: "nantou" },
             "yunlin": { name: "📍 雲林縣", endpoint: "yunlin" },
-
-            // === 南部 ===
             "chiayi_city": { name: "📍 嘉義市", endpoint: "chiayi_city" },
             "chiayi_county": { name: "📍 嘉義縣", endpoint: "chiayi_county" },
             "tainan": { name: "📍 臺南市", endpoint: "tainan" },
             "kaohsiung": { name: "📍 高雄市", endpoint: "kaohsiung" },
             "pingtung": { name: "📍 屏東縣", endpoint: "pingtung" },
-
-            // === 東部 ===
             "hualien": { name: "📍 花蓮縣", endpoint: "hualien" },
             "taitung": { name: "📍 臺東縣", endpoint: "taitung" },
-
-            // === 外島 ===
             "penghu": { name: "📍 澎湖縣", endpoint: "penghu" },
             "kinmen": { name: "📍 金門縣", endpoint: "kinmen" },
             "lienchiang": { name: "📍 連江縣", endpoint: "lienchiang" }
         };
 
         const API_BASE = "https://weather-jane1001.zeabur.app/api/weather/";
-        
-        // 預設城市
         let currentCityKey = "tainan"; 
+
+        // === 新增：自動切換日夜背景影片函式 ===
+        function updateBackgroundVideo() {
+            const nowHour = new Date().getHours();
+            const videoElement = document.getElementById('bgVideo');
+            
+            let targetVideo = VIDEO_DAY;
+
+            // 定義晚上時間：晚上 6 點(18) 到 早上 6 點(6) 之間
+            if (nowHour >= 18 || nowHour < 6) {
+                targetVideo = VIDEO_NIGHT;
+            } else {
+                targetVideo = VIDEO_DAY;
+            }
+
+            // 檢查：如果現在播放的跟目標不一樣，才切換 (避免閃爍)
+            // 使用 includes 是因為 src 會包含完整的網址路徑
+            if (!videoElement.src.includes(targetVideo)) {
+                console.log("Switching video to:", targetVideo);
+                videoElement.src = targetVideo;
+            }
+        }
 
         function getWeatherIcon(weather) {
             if (!weather) return "🌤️";
@@ -372,10 +372,12 @@
             const current = forecasts[0];
             const others = forecasts.slice(1);
 
+            // 更新背景 (每次渲染天氣時順便檢查時間)
+            updateBackgroundVideo();
+
             const advice = getAdvice(current.rain, current.maxTemp);
             const avgTemp = Math.round((parseInt(current.maxTemp) + parseInt(current.minTemp)) / 2);
 
-            // 渲染 Hero Card (玻璃擬態版)
             document.getElementById('heroCard').innerHTML = `
                 <div class="glass-card hero-card">
                     <div class="hero-period">CURRENTLY</div>
@@ -400,7 +402,6 @@
                 </div>
             `;
 
-            // 渲染列表清單
             const listContainer = document.getElementById('futureForecasts');
             listContainer.innerHTML = '';
 
@@ -428,26 +429,20 @@
                 `;
             });
 
-            // 更新時間
             const now = new Date();
             document.getElementById('updateTime').textContent = 
                 `${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')} 更新`;
         }
 
         async function fetchWeather() {
-            // 顯示 Loading
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('loading').style.opacity = '1';
 
             try {
-                // 根據當前選擇的城市，決定 API 網址
-                // 如果選 tainan，這裡會拿到 "kaohsiung" (根據上面的 CITY_DATA 設定)
                 const endpoint = CITY_DATA[currentCityKey].endpoint; 
                 const targetUrl = API_BASE + endpoint;
-
-                console.log("Fetching:", targetUrl); // 除錯用，看抓哪裡
-
-                const delayPromise = new Promise(resolve => setTimeout(resolve, 800)); // 縮短一點等待時間比較流暢
+                
+                const delayPromise = new Promise(resolve => setTimeout(resolve, 800));
                 const fetchPromise = fetch(targetUrl).then(res => res.json());
 
                 const [_, json] = await Promise.all([delayPromise, fetchPromise]);
@@ -455,7 +450,6 @@
                 if (json.success) {
                     renderWeather(json.data);
                     
-                    // 淡出 Loading
                     const loading = document.getElementById('loading');
                     loading.style.opacity = '0';
                     setTimeout(() => {
@@ -473,18 +467,15 @@
             }
         }
 
-        // 初始化下拉選單
         function initCitySelector() {
             const selector = document.getElementById('citySelector');
-            selector.innerHTML = ''; // 清空
+            selector.innerHTML = ''; 
 
-            // 遍歷 CITY_DATA 自動產生選項
             for (const [key, data] of Object.entries(CITY_DATA)) {
                 const option = document.createElement('option');
                 option.value = key;
                 option.textContent = data.name;
                 
-                // 設定預設選項為臺南
                 if (key === 'tainan') {
                     option.selected = true;
                 }
@@ -493,19 +484,19 @@
             }
         }
 
-        // 記得在頁面載入時呼叫它！
+        // 頁面載入執行 (這裡幫你合併整理好了)
         document.addEventListener("DOMContentLoaded", () => {
-            initCitySelector(); // 先產生選單
-            fetchWeather();     // 再抓天氣
+            initCitySelector(); 
+            updateBackgroundVideo(); // 一進來先檢查一次時間，決定要播哪部
+            fetchWeather();     
         });
 
         // 監聽選單切換事件
         document.getElementById('citySelector').addEventListener('change', function(e) {
-            currentCityKey = e.target.value; // 更新當前城市 key
-            fetchWeather(); // 重新抓資料
+            currentCityKey = e.target.value; 
+            fetchWeather(); 
         });
 
-        document.addEventListener("DOMContentLoaded", fetchWeather);
     </script>
 </body>
 </html>

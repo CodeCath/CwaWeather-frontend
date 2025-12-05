@@ -382,10 +382,10 @@
         }
 
         function getAdvice(rainProb, maxTemp) {
-            let rainText = parseInt(rainProb) > 30 ? "攜帶雨具" : "無須帶傘";
+            let rainText = parseInt(rainProb) > 30 ? "攜帶雨具" : "放心出門啦";
             let clothText = "舒適穿著";
             if (parseInt(maxTemp) >= 28) clothText = "短袖透氣";
-            else if (parseInt(maxTemp) <= 20) clothText = "添加外套";
+            else if (parseInt(maxTemp) <= 20) clothText = "要穿外套";
             return { rainText, clothText };
         }
 

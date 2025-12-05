@@ -281,15 +281,39 @@
     </div>
 
     <script>
-        // === 前端對照表更新 ===
-        // 因為後端已經修好邏輯了，這裡的 endpoint 直接對應英文代碼即可
+        // === 前端完整版：全臺 22 縣市設定 ===
         const CITY_DATA = {
-            "taipei": { name: "臺北市", endpoint: "taipei" },
-            "new_taipei": { name: "新北市", endpoint: "new_taipei" },
-            "taoyuan": { name: "桃園市", endpoint: "taoyuan" },
-            "taichung": { name: "臺中市", endpoint: "taichung" },
-            "tainan": { name: "臺南市", endpoint: "tainan" }, // 現在 tainan 就真的是 tainan 了！
-            "kaohsiung": { name: "高雄市", endpoint: "kaohsiung" }
+            // === 北部 ===
+            "keelung": { name: "📍 基隆市", endpoint: "keelung" },
+            "taipei": { name: "📍 臺北市", endpoint: "taipei" },
+            "new_taipei": { name: "📍 新北市", endpoint: "new_taipei" },
+            "taoyuan": { name: "📍 桃園市", endpoint: "taoyuan" },
+            "hsinchu_city": { name: "📍 新竹市", endpoint: "hsinchu_city" },
+            "hsinchu_county": { name: "📍 新竹縣", endpoint: "hsinchu_county" },
+            "yilan": { name: "📍 宜蘭縣", endpoint: "yilan" },
+
+            // === 中部 ===
+            "miaoli": { name: "📍 苗栗縣", endpoint: "miaoli" },
+            "taichung": { name: "📍 臺中市", endpoint: "taichung" },
+            "changhua": { name: "📍 彰化縣", endpoint: "changhua" },
+            "nantou": { name: "📍 南投縣", endpoint: "nantou" },
+            "yunlin": { name: "📍 雲林縣", endpoint: "yunlin" },
+
+            // === 南部 ===
+            "chiayi_city": { name: "📍 嘉義市", endpoint: "chiayi_city" },
+            "chiayi_county": { name: "📍 嘉義縣", endpoint: "chiayi_county" },
+            "tainan": { name: "📍 臺南市", endpoint: "tainan" },
+            "kaohsiung": { name: "📍 高雄市", endpoint: "kaohsiung" },
+            "pingtung": { name: "📍 屏東縣", endpoint: "pingtung" },
+
+            // === 東部 ===
+            "hualien": { name: "📍 花蓮縣", endpoint: "hualien" },
+            "taitung": { name: "📍 臺東縣", endpoint: "taitung" },
+
+            // === 外島 ===
+            "penghu": { name: "📍 澎湖縣", endpoint: "penghu" },
+            "kinmen": { name: "📍 金門縣", endpoint: "kinmen" },
+            "lienchiang": { name: "📍 連江縣", endpoint: "lienchiang" }
         };
 
         const API_BASE = "https://weather-jane1001.zeabur.app/api/weather/";
